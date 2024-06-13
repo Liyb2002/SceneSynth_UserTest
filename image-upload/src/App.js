@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Stage, Layer, Image as KonvaImage, Rect } from 'react-konva';
 import useImage from './useImage';
 
-const GRID_ROWS = 256;
-const GRID_COLS = 256;
+const GRID_ROWS = 64;
+const GRID_COLS = 64;
 const GRID_WIDTH = 1024 / GRID_COLS;
 const GRID_HEIGHT = 1024 / GRID_ROWS;
 
@@ -12,6 +12,7 @@ function App() {
   const [image] = useImage(selectedImage);
   const [gridColors, setGridColors] = useState({});
   const [currentColor, setCurrentColor] = useState('red');
+  const [isDrawing, setIsDrawing] = useState(false);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -22,8 +23,25 @@ function App() {
     const key = `${row}-${col}`;
     setGridColors((prevColors) => ({
       ...prevColors,
-      [key]: prevColors[key] === currentColor ? null : currentColor,
+      [key]: currentColor,
     }));
+  };
+
+  const handleMouseDown = () => {
+    setIsDrawing(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsDrawing(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDrawing) return;
+    const stage = e.target.getStage();
+    const pointerPosition = stage.getPointerPosition();
+    const row = Math.floor(pointerPosition.y / GRID_HEIGHT);
+    const col = Math.floor(pointerPosition.x / GRID_WIDTH);
+    handleGridClick(row, col);
   };
 
   const renderGrid = () => {
@@ -41,7 +59,9 @@ function App() {
             fill={gridColors[key] || 'transparent'}
             stroke="black"
             strokeWidth={1}
-            onClick={() => handleGridClick(i, j)}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
           />
         );
       }
