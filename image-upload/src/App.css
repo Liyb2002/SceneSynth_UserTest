@@ -1,0 +1,12 @@
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+input[type="file"] {
+  margin: 20px 0;
+}
+
+img {
+  margin-top: 20px;
+}
