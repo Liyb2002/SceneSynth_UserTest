@@ -23,7 +23,7 @@ function App() {
     const key = `${row}-${col}`;
     setGridColors((prevColors) => ({
       ...prevColors,
-      [key]: currentColor,
+      [key]: currentColor === 'erase' ? null : currentColor,
     }));
   };
 
@@ -76,6 +76,7 @@ function App() {
       <div>
         <button onClick={() => setCurrentColor('red')}>Red</button>
         <button onClick={() => setCurrentColor('blue')}>Blue</button>
+        <button onClick={() => setCurrentColor('erase')}>Erase</button>
       </div>
       {selectedImage && image && (
         <Stage width={1024} height={1024}>
